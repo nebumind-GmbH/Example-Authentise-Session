@@ -48,7 +48,7 @@ class AuthentiseSession:
 
     def _get_api_key(self):
         """
-        Exaple of fetching the long-term API Key from our api_tokens service.
+        Exaple of fetching the long-term API Key from our api_token service.
         Cookie is used to get an API Key (longer term access key) 
         """
         data = {"name": "create-bureau"}
@@ -56,7 +56,7 @@ class AuthentiseSession:
         headers = {"content-type": "application/json", "cookie": self.session_cookie}
 
         response = requests.post(
-            "https://users.{}/api_tokens/".format(self.host),
+            "https://users.{}/api_token/".format(self.host),
             json=data,
             headers=headers,
             verify=self.verify_ssl,
