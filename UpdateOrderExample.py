@@ -2,7 +2,7 @@
 import argparse
 from AuthSessionExample import AuthentiseSession
 
-# Example Usage: python3 MakeOrderExample.py user@email.com 'User Password!'  "https://data.authentise.com/order/121212"
+# Example Usage: python3 UpdateOrderExample.py user@email.com 'User Password!'  "https://data.authentise.com/order/121212"
 #
 # This is an example of updating an order that exists in Authentise 
 #
