@@ -11,29 +11,6 @@ from AuthSessionExample import AuthentiseSession
 # an order to track the model's requester and shipping information.
 
 
-def upack_zip(filename):
-    # code to unpack zip files. Returns metadata-dict, and list of tmp-files of models
-    metadata = {"order_anme": "fake order", "files ": []}
-    for i in range(0, 3):
-        fake_file_dict = {"material": f"Material{i}", "filename": f"filename{i}"}
-        metadata["files"].append(fake_file_dict)
-
-
-def model_dict_from_zip(zip_dict):
-    """ TBD. unpack zip metadata into model-centric details"""
-    return {}
-
-
-def line_item_dict_from_zip(zip_dict):
-    """ TBD. unpack zip metadata into line-item centric details"""
-    return {}
-
-
-def order_dict_from_zip(zip_dict):
-    """ TBD. unpack zip metadata into order centric details"""
-    return
-
-
 def quick_order_shipping_dict(shipping_uri):
     s = {
         "address": "dummy address",
@@ -49,7 +26,7 @@ if __name__ == "__main__":
 
     # build our command line parser
     parser = argparse.ArgumentParser(
-        description="Example of getting an API Key for Authentise."
+        description="Example of Making a new Order via API for Authentise."
     )
     parser.add_argument("username", help="username to log-in via")
     parser.add_argument("password", help="password to log-in via")

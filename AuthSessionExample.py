@@ -83,14 +83,8 @@ class AuthentiseSession:
             url.format(self.host), auth=auth, data=filters, verify=self.verify_ssl
         )
         if not list_response.ok:
-            import pdb
-
-            pdb.set_trace()
             return {}
         return list_response.json()
-
-    def make_request(self, url, data):
-        return self.post(url, data)
 
     def post(self, url, data, format_=None):
         "Example of calling the API using the API Key to request data from an endpoint"
@@ -113,6 +107,28 @@ class AuthentiseSession:
             verify=self.verify_ssl,
             headers=headers,
         )
+
+    def get_by_url(self, resource_uri):
+        """Takes a raw URL, gets the dict of the resource at that location. None on error""" 
+        auth = HTTPBasicAuth(self.api_auth["uuid"], self.api_auth["secret"])
+        ret = requests.get( resource_uri, auth=auth, verify=self.verify_ssl)
+        if ret.status_code != 200:
+            print(f"error getting data on {resource_uri}, got response {ret.text}")
+            import pdb; pdb.set_trace()
+            return None
+        return ret.json()
+
+    def update(self, resource_uri, update_dict): 
+        return self.put_(resource_uri, update_dict)
+
+    def put_(self, resource_uri, update_dict): 
+        auth = HTTPBasicAuth(self.api_auth["uuid"], self.api_auth["secret"])
+        ret = requests.put( resource_uri, auth=auth, json=update_dict, verify=self.verify_ssl)
+        if not ret.ok: 
+            print(f"failed to update resource {resource_uri} due to error {ret.text}")
+            return False
+        return True
+
 
     def post_and_upload(self, url, data, file_obj):
         """ does a post to create a resource at 'URL'. 
@@ -197,6 +213,9 @@ class AuthentiseSession:
             exit(0)
         # returns just our first material we find
         return entry.get("uri")
+
+    def make_request(self, url, data):
+        return self.post(url, data)
 
 
 if __name__ == "__main__":
