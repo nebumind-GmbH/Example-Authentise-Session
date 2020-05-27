@@ -157,7 +157,7 @@ class AuthentiseSession:
         backing_ret = requests.put(
             upload_url,
             auth=auth,
-            data=data,
+            data= raw_data,
             headers={"Content-Type": "application/octet-stream"},
         )
         if backing_ret.status_code != 204:
