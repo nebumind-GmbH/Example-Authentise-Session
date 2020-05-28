@@ -82,3 +82,4 @@ if __name__ == "__main__":
     print(f"Z in mm {model_dict['size']['z']}")
     print(f"Surface Area in MM squared {model_dict['surface_area_mm']}")
     print(f"Volume in MM cubed {model_dict['volume_mm']}")
+    print(f"Snapshot link: {model_dict['snapshot_content']}")
