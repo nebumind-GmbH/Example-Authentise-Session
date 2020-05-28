@@ -39,47 +39,6 @@ if __name__ == "__main__":
             )
             print(f"posted a model. got {new_model_uri}")
 
-    # make a line-item if we have the backing data for it
-    new_line_item_uri = None
-    if new_model_uri:
-        # setup data for our line-item
-        line_item_metadata = {}
-        line_item_metadata["model"] = new_model_uri
-        line_item_metadata["bureau"] = sesh.get_bureau_uri()
-        line_item_metadata["materials"] = {
-            "base": sesh.get_any_material_uri(),
-            "support": None,
-        }
-        line_item_metadata["quantity"] = 1
-
-        new_line_item_response = sesh.post(
-            "https://data.{}/line-item/", line_item_metadata, format_="json"
-        )
-        if not new_line_item_response.ok:
-            print(f"error making line-item {new_line_item_response.text}")
-            exit(3)
-        new_line_item_uri = new_line_item_response.headers["Location"]
-        print(f"new line item at {new_line_item_uri}")
-
-    new_order_uri = None
-    if new_line_item_uri:
-        order_metadata = {}
-        order_metadata["line_items"] = [new_line_item_uri]
-        order_metadata["bureau"] = sesh.get_bureau_uri()
-        order_metadata["name"] = "New Order for " + str(model_metadata["name"])
-        order_metadata["currency"] = "USD"
-        order_metadata["shipping"] = quick_order_shipping_dict(
-            sesh.get_any_shipping_uri()
-        )
-        new_order_response = sesh.post(
-            "https://data.{}/order/", order_metadata, format_="json"
-        )
-        if not new_order_response.ok:
-            print(f"new order creation error {new_order_response.text} ")
-            exit(5)  # error
-        new_order_uri = new_order_response.headers["Location"]
-        print(f"new order at {new_order_uri}")
-
     model_dict = sesh.get_by_url(new_model_uri)
 
     print(f"X in mm {model_dict['size']['x']}")
