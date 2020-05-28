@@ -1,4 +1,6 @@
+import time
 import argparse
+
 from AuthSessionExample import AuthentiseSession
 from MakeOrderExample import quick_order_shipping_dict
 
@@ -85,4 +87,12 @@ if __name__ == "__main__":
     print(f"Z in mm {model_dict['size']['z']}")
     print(f"Surface Area in MM squared {model_dict['surface_area_mm']}")
     print(f"Volume in MM cubed {model_dict['volume_mm']}")
+    print("Processing snapshot....")
+
+    # allow time for model to process, otherwise snapshot_content may be None
+    timeout = time.time() + 15
+    while not model_dict['snapshot_content']:
+        if time.time() >= timeout:
+            print("error processing model")
+            break
     print(f"Snapshot link: {model_dict['snapshot_content']}")
