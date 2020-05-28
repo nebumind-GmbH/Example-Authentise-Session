@@ -7,7 +7,7 @@ if __name__ == "__main__":
     print("Running Get Model Stats Example at the command line")
 
     parser = argparse.ArgumentParser(
-            description="Example if getting model stats via API for Authentise."
+            description="Example of getting model stats via API for Authentise."
     )
     parser.add_argument("username", help="username to log-in via")
     parser.add_argument("password", help="password to log-in via")
