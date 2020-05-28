@@ -11,13 +11,16 @@ if __name__ == "__main__":
     )
     parser.add_argument("username", help="username to log-in via")
     parser.add_argument("password", help="password to log-in via")
-    parser.add_argument("stl_file", help="STL file to uploda to an order")
+    parser.add_argument("stl_file", help="path to STL file you would like to upload")
+    parser.add_argument(
+        "environment", help="The base URL to use with requsts, eg. dev-auth.com for dev or authentise.com for production."
+    )
 
     args = parser.parse_args()
 
     sesh = None
     if "username" in args and "password" in args:
-        sesh = AuthentiseSession(host="authentise.com", verify_ssl=True)
+        sesh = AuthentiseSession(host=args.environment, verify_ssl=True)
         sesh.init_api(args.username, args.password)
 
     if not sesh:
