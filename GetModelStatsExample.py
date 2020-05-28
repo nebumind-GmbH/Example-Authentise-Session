@@ -91,8 +91,13 @@ if __name__ == "__main__":
 
     # allow time for model to process, otherwise snapshot_content may be None
     timeout = time.time() + 15
-    while not model_dict['snapshot_content']:
+    while True:
         if time.time() >= timeout:
             print("error processing model")
             break
-    print(f"Snapshot link: {model_dict['snapshot_content']}")
+
+        time.sleep(1)
+        model_dict = sesh.get_by_url(new_model_uri)
+        if model_dict['snapshot_content']:
+            print(f"Snapshot link: {model_dict['snapshot_content']}")
+            break
