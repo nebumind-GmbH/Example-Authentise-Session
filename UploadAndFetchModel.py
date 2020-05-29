@@ -4,6 +4,10 @@ import argparse
 from AuthSessionExample import AuthentiseSession
 from MakeOrderExample import quick_order_shipping_dict
 
+"""
+This example is a quick example, for  files less than 9 mb.
+For larger files a longer wait, endpoint polling, or reading from the event stream may be needed
+"""
 
 if __name__ == "__main__":
     print("Running Get Model Stats Example at the command line")
@@ -41,11 +45,6 @@ if __name__ == "__main__":
 
     model_dict = sesh.get_by_url(new_model_uri)
 
-    print(f"X in mm {model_dict['size']['x']}")
-    print(f"Y in mm {model_dict['size']['y']}")
-    print(f"Z in mm {model_dict['size']['z']}")
-    print(f"Surface Area in MM squared {model_dict['surface_area_mm']}")
-    print(f"Volume in MM cubed {model_dict['volume_mm']}")
     print("Processing snapshot....")
 
     # allow time for model to process, otherwise snapshot_content may be None
@@ -58,5 +57,10 @@ if __name__ == "__main__":
         time.sleep(1)
         model_dict = sesh.get_by_url(new_model_uri)
         if model_dict['snapshot_content']:
+            print(f"X in mm {model_dict['size']['x']}")
+            print(f"Y in mm {model_dict['size']['y']}")
+            print(f"Z in mm {model_dict['size']['z']}")
+            print(f"Surface Area in MM squared {model_dict['surface_area_mm']}")
+            print(f"Volume in MM cubed {model_dict['volume_mm']}")
             print(f"Snapshot link: {model_dict['snapshot_content']}")
             break
