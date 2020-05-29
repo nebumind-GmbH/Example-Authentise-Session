@@ -4,11 +4,6 @@ import argparse
 from AuthSessionExample import AuthentiseSession
 from MakeOrderExample import quick_order_shipping_dict
 
-"""
-This example is a quick example, for  files less than 9 mb.
-For larger files a longer wait, endpoint polling, or reading from the event stream may be needed
-"""
-
 if __name__ == "__main__":
     print("Running Get Model Stats Example at the command line")
 
@@ -45,22 +40,38 @@ if __name__ == "__main__":
 
     model_dict = sesh.get_by_url(new_model_uri)
 
+    print("This script runs for 60 seconds. If the model size is too large to be processed within that time the script will timeout.")
     print("Processing snapshot....")
 
     # allow time for model to process, otherwise snapshot_content may be None
-    timeout = time.time() + 15
+    time_limit = 60
+    timeout = time.time() + time_limit
+    got_model_stats = False
+
     while True:
         if time.time() >= timeout:
-            print("error processing model")
+            print("Hit script timeout limit. Exiting")
             break
 
-        time.sleep(1)
+        time.sleep(3)
         model_dict = sesh.get_by_url(new_model_uri)
+
+        if not got_model_stats:
+            # if x dimension has been processed, others should be also be processed by now
+            if model_dict['size']['x'] is not None:
+                print(f"X in mm {model_dict['size']['x']}")
+                print(f"Y in mm {model_dict['size']['y']}")
+                print(f"Z in mm {model_dict['size']['z']}")
+                print(f"Surface Area in MM squared {model_dict['surface_area_mm']}")
+                print(f"Volume in MM cubed {model_dict['volume_mm']}")
+                got_model_stats = True
+
         if model_dict['snapshot_content']:
-            print(f"X in mm {model_dict['size']['x']}")
-            print(f"Y in mm {model_dict['size']['y']}")
-            print(f"Z in mm {model_dict['size']['z']}")
-            print(f"Surface Area in MM squared {model_dict['surface_area_mm']}")
-            print(f"Volume in MM cubed {model_dict['volume_mm']}")
             print(f"Snapshot link: {model_dict['snapshot_content']}")
             break
+
+    if not got_model_stats:
+        print(f"Model dimensions and volume/surface area data could not be processed within {str(time_limit)} seconds")
+
+    if model_dict['snapshot_content'] is None:
+        print(f"Model snapshot could not be processed within {str(time_limit)} seconds")
