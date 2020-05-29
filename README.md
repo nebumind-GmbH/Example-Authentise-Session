@@ -10,3 +10,7 @@ to test making an order:
 
 To test updating an order:
 ` python3 UpdateOrderExample.py user@email.com 'User Password!'  "https://data.authentise.com/order/121212"`
+
+To test uploading a model and retrieving info about that model:
+`python3 GetModelStatsExample.py user@email.com 'User Password!' 10x40mmtower.stl `
+
