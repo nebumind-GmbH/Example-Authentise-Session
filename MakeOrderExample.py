@@ -82,7 +82,6 @@ if __name__ == "__main__":
         order_metadata["line_items"] = [new_line_item_uri]
         order_metadata["bureau"] = sesh.get_bureau_uri()
         order_metadata["name"] = "New Order for " + str(model_metadata["name"])
-        order_metadata["currency"] = "USD"
         order_metadata["shipping"] = quick_order_shipping_dict(
             sesh.get_any_shipping_uri()
         )
