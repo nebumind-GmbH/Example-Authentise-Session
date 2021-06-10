@@ -2,6 +2,7 @@ import argparse
 
 import requests
 import json
+import os
 
 from requests.auth import HTTPBasicAuth
 
@@ -64,6 +65,7 @@ class AuthentiseSession:
         if response.ok:
             self.api_auth = response.json()
             print(" We have received an API key we can re-use")
+            print(f"--api-key '{json.dumps(self.api_auth)}'")
         else:
             print(" No API key matched.")
             exit(1)  # hard fail
@@ -225,11 +227,16 @@ if __name__ == "__main__":
         description="Example of getting an API Key for Authentise."
     )
     parser.add_argument("username", help="username to log-in via")
-    parser.add_argument("password", help="password to log-in via")
+    parser.add_argument("--api-key", help="api key from a previous run", default=None, type=json.loads)
+    parser.add_argument("password", help="password to log-in via", nargs='?')
+    parser.add_argument("--host", help="the authentise host to log-in to", default="authentise.com")
 
     args = parser.parse_args()
-    if "username" in args and "password" in args:
+
+    sesh = AuthentiseSession(host=args.host, verify_ssl=True)
+    if args.password is not None:
         # print(args)
-        sesh = AuthentiseSession(host="authentise.com", verify_ssl=True)
         sesh.init_api(args.username, args.password)
+    elif args.api_key is not None:
+        sesh.api_auth = args.api_key
     # ags should print there error, no else case needed
