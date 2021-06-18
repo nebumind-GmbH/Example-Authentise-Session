@@ -1,5 +1,6 @@
 import argparse
 
+import getpass
 import requests
 import json
 import os
@@ -120,6 +121,16 @@ class AuthentiseSession:
             return None
         return ret.json()
 
+    def get_raw(self, resource_uri):
+        """Takes a raw URL, gets the dict of the resource at that location. None on error""" 
+        auth = HTTPBasicAuth(self.api_auth["uuid"], self.api_auth["secret"])
+        ret = requests.get( resource_uri, auth=auth, verify=self.verify_ssl)
+        if ret.status_code != 200:
+            print(f"error getting data on {resource_uri}, got response {ret.text}")
+            import pdb; pdb.set_trace()
+            return None
+        return ret
+
     def update(self, resource_uri, update_dict): 
         return self.put_(resource_uri, update_dict)
 
@@ -226,8 +237,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Example of getting an API Key for Authentise."
     )
-    parser.add_argument("username", help="username to log-in via")
     parser.add_argument("--api-key", help="api key from a previous run", default=None, type=json.loads)
+    parser.add_argument("username", help="username to log-in via")
     parser.add_argument("password", help="password to log-in via", nargs='?')
     parser.add_argument("--host", help="the authentise host to log-in to", default="authentise.com")
 
@@ -235,8 +246,22 @@ if __name__ == "__main__":
 
     sesh = AuthentiseSession(host=args.host, verify_ssl=True)
     if args.password is not None:
-        # print(args)
         sesh.init_api(args.username, args.password)
     elif args.api_key is not None:
         sesh.api_auth = args.api_key
+    else:
+        sesh.init_api(args.username, getpass.getpass())
+    captures = sesh.list('https://data.{}/capture')
+    for resource in captures['resources']:
+        print(resource)
+        request = sesh.get_raw(resource['content_download'])
+        print(request.ok)
+        print(len(request.text))
+        with open(resource['content_download'].split('/')[-2], 'w') as ofile:
+            ofile.write(request.text)
+        request = sesh.get_raw(resource['content_parsed_download'])
+        print(request.ok)
+        print(len(request.text))
+
+
     # ags should print there error, no else case needed
